@@ -155,8 +155,8 @@ elif [[ "$1" = "add" || "$1" = "flex" ]]; then
     if [[ $hours == 0 && $minutes == 0 ]]; then
         echo "Error: at least one of <hours> and <minutes> must be non-zero"
         exit
-    elif [[ $hours -lt 0 || $hours -gt 24 ]]; then
-        echo "Error: hours must be between 0-24, got $hours"
+    elif [[ $hours -lt 0 ]]; then
+        echo "Error: hours must be over 0, got $hours"
         exit
     elif [[ ${minutes#-} -lt 0 || ${minutes#-} -gt 59 ]]; then
         echo "Error: minutes must be between 0-59, got $minutes"
