@@ -33,6 +33,7 @@ Options:
 
 initialize_db () {
     sqlite3 ${1:-overtime} < ./dbsetup.sql
+    echo "Database created at ${1:-overtime}"
 }
 add_horus () {
     local dbname="$1"
