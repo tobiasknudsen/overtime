@@ -89,7 +89,14 @@ undo () {
 # Main program
 #
 
-database=overtime
+# Source the .env file to load environment variables
+if [ -f .env ]; then
+  source .env
+fi
+
+# Use the DATABASE_PATH environment variable, default to "overtime.db" if not set
+database=${DATABASE_PATH:-"overtime.db"}
+
 while getopts "hc:" opt; do
     case "${opt}" in
         h)  # Show help then exit
