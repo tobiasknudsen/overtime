@@ -32,8 +32,7 @@ Options:
 #
 
 initialize_db () {
-    createdb "${1:-overtime}" "A simple way to keep track of your overtime."
-    psql -d "${1:-overtime}" -f ./dbsetup.sql
+    sqlite3 ${1:-overtime} < ./dbsetup.sql
 }
 add_horus () {
     local dbname="$1"
@@ -61,28 +60,28 @@ add_horus () {
     done
 
     # The ``:0:-2`` strips off the trailing comma and white space
-    psql -d $dbname -c "INSERT INTO overtime (${names_query:0:-2}) VALUES (${values_query:0:-2})" --quiet
+    sqlite3 $dbname "INSERT INTO overtime (${names_query:0:-2}) VALUES (${values_query:0:-2})"
 }
 log () {
-    psql -d $1 -c "SELECT * FROM overtime ORDER BY created_at DESC" --quiet
+    sqlite3 -table $1 "SELECT * FROM overtime ORDER BY created_at DESC"
 }
 balance () {
     # Store result in a string before outputting as this will strip any whitespace
     balance_text=`
-        psql -d $1 -t -c "
-            SELECT CONCAT(
-                'Current balance: ',
-                SUM(hours) + SUM(minutes)/60,
-                ' hours and ',
-                MOD(SUM(minutes), 60),
+        sqlite3 $1 "
+            SELECT (
+                'Current balance: ' ||
+                (SUM(hours) + SUM(minutes)/60) ||
+                ' hours and ' ||
+                (MOD(SUM(minutes), 60)) ||
                 ' minutes'
             )
             FROM overtime
-        " --quiet`
+        "`
     echo ${balance_text}
 }
 undo () {
-    psql -d $1 -c "DELETE FROM overtime WHERE created_at in (SELECT created_at from overtime ORDER BY created_at desc limit 1)" --quiet
+    sqlite3 $1 "DELETE FROM overtime WHERE created_at in (SELECT created_at from overtime ORDER BY created_at desc limit 1)"
 }
 
 
