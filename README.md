@@ -21,13 +21,19 @@ chmod +x overtime
 export PATH=$PATH:`pwd`
 ```
 
-5. Run the initial installation. This step will create a sqlite database named `overtime` (you may specify another name with the `-c` flag, in which case this has to be provided in all commands) with one table called `overtime`. This is where all logged hours will be stored.
+5. (Optional) create a .env file to set the database path on the format:
+
+```
+DATABASE_PATH=~/overtime.db
+```
+
+6. Run the initial installation. This step will create a sqlite database named `overtime` (you may specify another name with the `-c` flag, in which case this has to be provided in all commands) with one table called `overtime`. This is where all logged hours will be stored.
 
 ```bash
 overtime install
 ```
 
-6. You're good to go. A good starting point is probably
+7. You're good to go. A good starting point is probably
 
 ```bash
 overtime -h
