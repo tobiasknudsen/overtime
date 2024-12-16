@@ -3,8 +3,8 @@
 A simple program to register overtime work hours.
 
 ## Dependencies
-- Postgres (tested on 14.9)
-- Bash >= 4.2 
+- Sqlite3
+- Bash >= 4.2
 
 
 ## Installation
@@ -21,7 +21,7 @@ chmod +x overtime
 export PATH=$PATH:`pwd`
 ```
 
-5. Run the initial installation. This step will create a postgres database named `overtime` (you may specify another name with the `-c` flag, in which case this has to be provided in all commands) with one table called `overtime`. This is where all logged hours will be stored.
+5. Run the initial installation. This step will create a sqlite database named `overtime` (you may specify another name with the `-c` flag, in which case this has to be provided in all commands) with one table called `overtime`. This is where all logged hours will be stored.
 
 ```bash
 overtime install
@@ -63,20 +63,20 @@ See the log
 
 ```bash
 overtime log
- id |         created_at         |    date    | hours | minutes |      message
-----+----------------------------+------------+-------+---------+--------------------
- 28 | 2022-04-06 00:16:56.309263 | 2022-04-06 |     0 |     -30 |
- 27 | 2022-04-06 00:16:48.850319 | 2022-02-02 |     1 |       0 |
- 26 | 2022-04-06 00:16:42.484353 | 2022-04-06 |     2 |      30 | Worked a lot today
++----+---------------------+------------+-------+---------+--------------------+
+| id |     created_at      |    date    | hours | minutes |      message       |
++----+---------------------+------------+-------+---------+--------------------+
+| 3  | 2024-12-16 10:35:12 | 2024-12-16 | 0     | -30     |                    |
+| 2  | 2024-12-16 10:35:06 | 2024-12-16 | 1     | 0       |                    |
+| 1  | 2024-12-16 10:34:57 | 2024-12-16 | 2     | 30      | Worked a lot today |
++----+---------------------+------------+-------+---------+--------------------+
 ```
 
 Check your current balance
 
 ```bash
 overtime balance
- hours_balance | minutes_balance
----------------+-----------------
-             3 |               0
+Current balance: 3 hours and 30.0 minutes
 ```
 
 Undo the last entry
@@ -84,31 +84,20 @@ Undo the last entry
 ```bash
 overtime undo
 overtime log
- id |         created_at         |    date    | hours | minutes |      message
-----+----------------------------+------------+-------+---------+--------------------
- 27 | 2022-04-06 00:16:48.850319 | 2022-02-02 |     1 |       0 |
- 26 | 2022-04-06 00:16:42.484353 | 2022-04-06 |     2 |      30 | Worked a lot today
++----+---------------------+------------+-------+---------+--------------------+
+| id |     created_at      |    date    | hours | minutes |      message       |
++----+---------------------+------------+-------+---------+--------------------+
+| 2  | 2024-12-16 10:35:06 | 2024-12-16 | 1     | 0       |                    |
+| 1  | 2024-12-16 10:34:57 | 2024-12-16 | 2     | 30      | Worked a lot today |
++----+---------------------+------------+-------+---------+--------------------+
 ```
 
-You can of course also work with the data directly from postgres:
+You can of course also work with the data directly from sqlite:
 
 ```bash
-psql -d overtime  # substitute "overtime" with whatever custom db name you may have chosen during installation
+sqlite3 overtime.db
 
-overtime=# \d
-              List of relations
- Schema |      Name       |   Type   | Owner
---------+-----------------+----------+-------
- public | overtime        | table    | per
- public | overtime_id_seq | sequence | per
-
-overtime=# select * from overtime;
- id |         created_at         |    date    | hours | minutes |      message
-----+----------------------------+------------+-------+---------+--------------------
- 26 | 2022-04-06 00:16:42.484353 | 2022-04-06 |     2 |      30 | Worked a lot today
- 27 | 2022-04-06 00:16:48.850319 | 2022-02-02 |     1 |       0 |
+sqlite> SELECT * FROM overtime;
+1|2024-12-16 10:34:57|2024-12-16|2|30|Worked a lot today
+2|2024-12-16 10:35:06|2024-12-16|1|0|
 ```
-
-## TODOs
-
-- The program has only been tested on macOS Monterey. Date functions used by overtime differ on Linux, so it won't necessarily work out-of-the-box.
