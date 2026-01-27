@@ -3,11 +3,12 @@
 A simple program to register overtime work hours.
 
 ## Dependencies
+
 - Sqlite3
 - Bash >= 4.2
 
-
 ## Installation
+
 1. Clone this repo.
 2. Change directory to the repo and make the program executable with
 
@@ -21,10 +22,10 @@ chmod +x overtime
 export PATH=$PATH:`pwd`
 ```
 
-5. (Optional) create a .env file to set the database path on the format:
+5. (Optional) create a .env file to specify the database path. Omit this step if you want to use the default location which is `~/overtime.db`.
 
 ```
-DATABASE_PATH=~/overtime.db
+DATABASE_PATH=/path/to/overtime.db
 ```
 
 6. Run the initial installation. This step will create a sqlite database named `overtime` (you may specify another name with the `-c` flag, in which case this has to be provided in all commands) with one table called `overtime`. This is where all logged hours will be stored.

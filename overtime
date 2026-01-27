@@ -98,8 +98,8 @@ if [ -f "$env_file" ]; then
   source "$env_file"
 fi
 
-# Use the DATABASE_PATH environment variable, default to "overtime.db" if not set
-database=${DATABASE_PATH:-"overtime.db"}
+# Use the DATABASE_PATH environment variable, default to ~/overtime.db if not set
+database=${DATABASE_PATH:-"$HOME/overtime.db"}
 
 while getopts "hc:" opt; do
     case "${opt}" in
