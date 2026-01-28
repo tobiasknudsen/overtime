@@ -1,6 +1,8 @@
 # Overtime
 
-A simple program to register overtime work hours.
+A lightweight CLI for tracking overtime.
+
+Log the difference whenever you work more or less than a standard day. Worked ten hours instead of eight? `add` two hours. Left early? `flex` the time you took off. Check your current balance with `balance` or review your history with `log`.
 
 ## Dependencies
 
