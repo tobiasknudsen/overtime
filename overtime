@@ -65,6 +65,22 @@ add_horus () {
 }
 log () {
     sqlite3 -table $1 "SELECT * FROM overtime ORDER BY created_at ASC"
+    
+    # Get totals - calculate total hours including minutes overflow
+    totals=$(sqlite3 $1 "
+        SELECT 
+            SUM(hours) + SUM(minutes) / 60 as total_hours,
+            SUM(minutes) % 60 as total_minutes
+        FROM overtime
+    ")
+    
+    # Extract values (sqlite3 returns pipe-separated values)
+    IFS='|' read -r total_hours total_minutes <<< "$totals"
+    
+    # Display totals row if there are records
+    if [ ! -z "$total_hours" ] && [ "$total_hours" != "" ] && [ "$total_hours" != "NULL" ]; then
+        echo "Total: $total_hours hours and $total_minutes minutes"
+    fi
 }
 balance () {
     # Store result in a string before outputting as this will strip any whitespace
